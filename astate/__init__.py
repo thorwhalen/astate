@@ -18,7 +18,7 @@ Recursively find elements in an ast body that satisfy a condition
     >>> [x.name for x in re_find_in_body(foo, max_levels=1)]
     ['foo']
 
-    
+
 ## remove_docstrings
 
 Remove docstrings from the given Python code.
@@ -46,4 +46,4 @@ Remove docstrings from the given Python code.
 '''
 
 from astate.util import is_ast, is_body, ensure_body, re_find_in_body
-from astate.misc import remove_docstrings
+from astate.misc import remove_docstrings, imported_packages_from_code
