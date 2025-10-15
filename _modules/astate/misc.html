@@ -157,6 +157,79 @@
     <span class="n">cleaned_ast</span> <span class="o">=</span> <span class="n">transformer</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">parsed_ast</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">unparse</span><span class="p">(</span><span class="n">cleaned_ast</span><span class="p">)</span></div>
 
+
+
+<span class="sd">&quot;&quot;&quot;Extract dependencies from setup.cfg files and Python source code.</span>
+
+<span class="sd">This module provides functionality to parse setup.cfg files and extract</span>
+<span class="sd">their required dependencies, as well as extract imported packages from Python code.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Set</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_return_none</span><span class="p">(</span><span class="n">error</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Default error handler that returns None.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="imported_packages_from_code">
+<a class="viewcode-back" href="../../module_docs/astate/misc.html#astate.misc.imported_packages_from_code">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">imported_packages_from_code</span><span class="p">(</span>
+    <span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">on_parsing_error</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="ne">Exception</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">_return_none</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract top-level package names from Python code using AST parsing.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        code: Python source code as a string</span>
+<span class="sd">        on_parsing_error: Callable to handle parsing errors. By default, returns None.</span>
+<span class="sd">                         Can be set to raise the error, e.g., `lambda e: (_ for _ in ()).throw(e)`</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Set of top-level package names imported in the code</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; code = &#39;&#39;&#39;</span>
+<span class="sd">        ... import os</span>
+<span class="sd">        ... import numpy as np</span>
+<span class="sd">        ... from collections import defaultdict</span>
+<span class="sd">        ... from pkg.submodule import something</span>
+<span class="sd">        ... &#39;&#39;&#39;</span>
+<span class="sd">        &gt;&gt;&gt; sorted(imported_packages_from_code(code))</span>
+<span class="sd">        [&#39;collections&#39;, &#39;numpy&#39;, &#39;os&#39;, &#39;pkg&#39;]</span>
+
+<span class="sd">        &gt;&gt;&gt; invalid_code = &#39;import os\\nthis is not valid python&#39;</span>
+<span class="sd">        &gt;&gt;&gt; result = imported_packages_from_code(invalid_code)</span>
+<span class="sd">        &gt;&gt;&gt; result is None</span>
+<span class="sd">        True</span>
+
+<span class="sd">        &gt;&gt;&gt; imported_packages_from_code(invalid_code, on_parsing_error=lambda e: (_ for _ in ()).throw(e))</span>
+<span class="sd">        Traceback (most recent call last):</span>
+<span class="sd">        ...</span>
+<span class="sd">        SyntaxError: invalid syntax...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">SyntaxError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">on_parsing_error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="n">packages</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">ast</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">tree</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Import</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">alias</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">names</span><span class="p">:</span>
+                <span class="c1"># Extract the top-level package name</span>
+                <span class="n">package</span> <span class="o">=</span> <span class="n">alias</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">packages</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">ImportFrom</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span><span class="p">:</span>
+                <span class="c1"># Extract the top-level package name</span>
+                <span class="n">package</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">module</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">packages</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">packages</span></div>
+
 </pre></div>
 
            </div>

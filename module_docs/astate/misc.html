@@ -51,6 +51,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../astate.html">astate</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">astate.misc</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#astate.misc.imported_packages_from_code"><code class="docutils literal notranslate"><span class="pre">imported_packages_from_code()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#astate.misc.remove_docstrings"><code class="docutils literal notranslate"><span class="pre">remove_docstrings()</span></code></a></li>
 </ul>
 </li>
@@ -84,6 +85,47 @@
   <section id="module-astate.misc">
 <span id="astate-misc"></span><h1>astate.misc<a class="headerlink" href="#module-astate.misc" title="Link to this heading"></a></h1>
 <p>Miscellenous tools using ast</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="astate.misc.imported_packages_from_code">
+<span class="sig-prename descclassname"><span class="pre">astate.misc.</span></span><span class="sig-name descname"><span class="pre">imported_packages_from_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">code:</span> <span class="pre">str,</span> <span class="pre">*,</span> <span class="pre">on_parsing_error:</span> <span class="pre">~typing.Callable[[Exception],</span> <span class="pre">None]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">_return_none&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/astate/misc.html#imported_packages_from_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astate.misc.imported_packages_from_code" title="Link to this definition"></a></dt>
+<dd><p>Extract top-level package names from Python code using AST parsing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>code</strong> – Python source code as a string</p></li>
+<li><p><strong>on_parsing_error</strong> – Callable to handle parsing errors. By default, returns None.
+Can be set to raise the error, e.g., <cite>lambda e: (_ for _ in ()).throw(e)</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Set of top-level package names imported in the code</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">code</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">... </span><span class="s1">import os</span>
+<span class="gp">... </span><span class="s1">import numpy as np</span>
+<span class="gp">... </span><span class="s1">from collections import defaultdict</span>
+<span class="gp">... </span><span class="s1">from pkg.submodule import something</span>
+<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">imported_packages_from_code</span><span class="p">(</span><span class="n">code</span><span class="p">))</span>
+<span class="go">[&#39;collections&#39;, &#39;numpy&#39;, &#39;os&#39;, &#39;pkg&#39;]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">invalid_code</span> <span class="o">=</span> <span class="s1">&#39;import os</span><span class="se">\n</span><span class="s1">this is not valid python&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">imported_packages_from_code</span><span class="p">(</span><span class="n">invalid_code</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">imported_packages_from_code</span><span class="p">(</span><span class="n">invalid_code</span><span class="p">,</span> <span class="n">on_parsing_error</span><span class="o">=</span><span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="p">(</span><span class="n">_</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="p">())</span><span class="o">.</span><span class="n">throw</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">SyntaxError</span>: <span class="n">invalid syntax...</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="astate.misc.remove_docstrings">
 <span class="sig-prename descclassname"><span class="pre">astate.misc.</span></span><span class="sig-name descname"><span class="pre">remove_docstrings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/astate/misc.html#remove_docstrings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astate.misc.remove_docstrings" title="Link to this definition"></a></dt>
