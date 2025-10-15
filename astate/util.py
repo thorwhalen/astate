@@ -1,6 +1,5 @@
 """Utils for astate"""
 
-
 import ast
 import inspect
 from functools import partial
@@ -58,18 +57,18 @@ def re_find_in_body(
 
     """
     if max_levels is None:
-        max_levels = float('infinity')
+        max_levels = float("infinity")
     if isinstance(cond, type):
         cond_type = cond
         cond = partial(_isinstance, typ=cond_type)
     body = ensure_body(body)
-    if not isinstance(body, Iterable) and (body_ := getattr(body, 'body', None)):
+    if not isinstance(body, Iterable) and (body_ := getattr(body, "body", None)):
         yield from re_find_in_body(body_, cond, max_levels)
     else:
         for t in body:
             if cond(t):
                 yield t
-            if hasattr(t, 'body'):
+            if hasattr(t, "body"):
                 max_levels -= 1
                 if max_levels > 0:
                     yield from re_find_in_body(t.body, cond, max_levels)

@@ -116,8 +116,8 @@ def separate_decorator_code(
     new_tree = extractor.visit(tree)
     ast.fix_missing_locations(new_tree)
 
-    decorator_code = '\n'.join(
-        [f'@{ast.unparse(d)}' for d in extractor.extracted_decorators]
+    decorator_code = "\n".join(
+        [f"@{ast.unparse(d)}" for d in extractor.extracted_decorators]
     )
     modified_code = ast.unparse(new_tree)
 

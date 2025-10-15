@@ -137,12 +137,12 @@ def imported_packages_from_code(
         if isinstance(node, ast.Import):
             for alias in node.names:
                 # Extract the top-level package name
-                package = alias.name.split('.')[0]
+                package = alias.name.split(".")[0]
                 packages.add(package)
         elif isinstance(node, ast.ImportFrom):
             if node.module:
                 # Extract the top-level package name
-                package = node.module.split('.')[0]
+                package = node.module.split(".")[0]
                 packages.add(package)
 
     return packages
