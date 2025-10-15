@@ -3,7 +3,8 @@
 import ast
 import inspect
 from functools import partial
-from typing import Iterable, Union, Callable, Optional
+from typing import Union, Optional
+from collections.abc import Iterable, Callable
 
 
 def is_ast(obj):
@@ -31,8 +32,8 @@ def _isinstance(obj, typ):
 
 def re_find_in_body(
     body,
-    cond: Union[Callable, type] = ast.FunctionDef,
-    max_levels: Optional[int] = None,
+    cond: Callable | type = ast.FunctionDef,
+    max_levels: int | None = None,
 ):
     """
     Recursively find elements in an ast body that satisfy a condition

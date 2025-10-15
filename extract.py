@@ -1,12 +1,13 @@
 """Extaction tools."""
 
-from typing import Union, Iterable, Optional, Tuple
+from typing import Union, Optional, Tuple
+from collections.abc import Iterable
 
 import ast
 
 
 def remove_decorator_code(
-    src: str, decorator_names: Optional[Union[str, Iterable[str]]] = None
+    src: str, decorator_names: str | Iterable[str] | None = None
 ) -> str:
     """
     Remove the code corresponding to decorators from a source code string.
@@ -71,8 +72,8 @@ def remove_decorator_code(
 
 
 def separate_decorator_code(
-    src: str, decorator_names: Optional[Union[str, Iterable[str]]] = None
-) -> Tuple[str, str]:
+    src: str, decorator_names: str | Iterable[str] | None = None
+) -> tuple[str, str]:
     """
     Separate decorator code and the main function/class code with decorators removed.
 

@@ -85,7 +85,8 @@ their required dependencies, as well as extract imported packages from Python co
 """
 
 import ast
-from typing import Callable, Set
+from typing import Set
+from collections.abc import Callable
 
 
 def _return_none(error: Exception) -> None:
@@ -95,7 +96,7 @@ def _return_none(error: Exception) -> None:
 
 def imported_packages_from_code(
     code: str, *, on_parsing_error: Callable[[Exception], None] = _return_none
-) -> Set[str]:
+) -> set[str]:
     """Extract top-level package names from Python code using AST parsing.
 
     Args:
