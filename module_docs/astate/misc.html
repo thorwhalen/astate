@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>astate.misc &mdash; astate 0.0.3 documentation</title>
+  <title>astate.misc &mdash; astate 0.0.6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=47de8214"></script>
+      <script src="../../_static/documentation_options.js?v=1fd71caa"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -87,7 +87,7 @@
 <p>Miscellenous tools using ast</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="astate.misc.imported_packages_from_code">
-<span class="sig-prename descclassname"><span class="pre">astate.misc.</span></span><span class="sig-name descname"><span class="pre">imported_packages_from_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">code:</span> <span class="pre">str,</span> <span class="pre">*,</span> <span class="pre">on_parsing_error:</span> <span class="pre">~typing.Callable[[Exception],</span> <span class="pre">None]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">_return_none&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/astate/misc.html#imported_packages_from_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astate.misc.imported_packages_from_code" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">astate.misc.</span></span><span class="sig-name descname"><span class="pre">imported_packages_from_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">code:</span> <span class="pre">str,</span> <span class="pre">*,</span> <span class="pre">on_parsing_error:</span> <span class="pre">~collections.abc.Callable[[Exception],</span> <span class="pre">None]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">_return_none&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/astate/misc.html#imported_packages_from_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#astate.misc.imported_packages_from_code" title="Link to this definition"></a></dt>
 <dd><p>Extract top-level package names from Python code using AST parsing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
